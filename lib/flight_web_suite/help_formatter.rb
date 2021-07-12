@@ -81,71 +81,79 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #==============================================================================
 
-module FlightWebSuite
-  class ProgramContext < Commander::HelpFormatter::ProgramContext
-    def initialize(runner)
-      super(runner)
-      # Commander uses a decorate_binding mechanism which is incredible tricky
-      # to use. It proved to be easier to monkey-patch the new methods onto
-      # the runner object directly
-      s = sections
-      cbs = commands_by_section
-      runner.define_singleton_method(:commands_by_section) { cbs }
-      runner.define_singleton_method(:sections){ s }
+module Commander
+  # Patch the section method onto Commander::Command
+  class Command
+    attr_writer :section
+
+    # NOTE: Provide the program implicitly once extracted
+    attr_accessor :program
+
+    def section
+      return @section if @section
+      # This is required as 'help' is defined before applying the patch
+      # Remove when extracted
+      return :__other__ unless program
+
+      # Find the longest matching section key/alias suffix
+      last = nil
+      cur = name
+      until last == cur do
+        @section = program.section_keys_map[cur]
+        return @section if @section
+        last = cur
+        cur = cur.split(/[_-]/, 2).last
+      end
+      @section = :__other__
+    end
+  end
+
+  # Patch the section method onto Commander::CLI
+  module CLI
+    def section(key, desc, aliases: [])
+      section_keys_map[key.to_s] = key
+      aliases.each { |a| section_keys_map[a.to_s] = key }
+
+      # Return the description
+      sections[key] = desc
     end
 
     def sections
-      @sections ||= {
-        ['domain'] => 'Domain Management:',
-        ['start', 'stop', 'restart', 'reload'] => 'Service Management:',
-        ['enable', 'disable'] => 'Service File Management:',
-      }
+      @sections ||= {}
     end
 
-    def command_prefix_order
-      @command_prefix_order ||= []
+    def section_keys_map
+      @section_keys_map ||= {}
     end
+
+    def run(*args)
+      instance = Runner.new(
+        @program, commands, default_command,
+        global_slop, aliases, args
+      )
+      # NOTE: Clean this method up when extracted
+      instance.sections = sections
+      instance.run
+    end
+  end
+
+  # Patch the helper methods onto Commander::CLI
+  class Runner
+    attr_accessor :sections
 
     def commands_by_section
-      @commands_by_section ||= begin
-        # Ignore aliases
-        main_commands = @target.instance_variable_get(:@commands)
-                               .reject { |c, _| @target.alias?(c) }
-
-        # Group the commands according to their *-suffix
-        suffixes = main_commands.each_with_object({}) do |(_, cmd), memo|
-          _, suffix = cmd.name.split('-', 2) || '__other__'
-          memo[suffix] ||= []
-          memo[suffix] << cmd
-          memo
-        end
-
-        # Group the suffixes into sections
-        hash = suffixes.each_with_object({}) do |(suffix, commands), memo|
-          key = sections.keys.find { |group| group.include?(suffix) } || ['__other__']
-          memo[key] ||= []
-          memo[key].push(*commands)
-        end
-
-        hash.keys.each do |key|
-          # Partition the commands into known/unknown prefixes
-          values_postition = hash[key].map do |command|
-            prefix, _ = command.name.split('-', 2)
-            idx = command_prefix_order.each_with_index.find { |p, _| p == prefix }&.fetch(1)
-            [command, idx]
-          end
-          known, unknown = values_postition.partition { |_, idx| idx }
-
-          # Sort known commands by prefix order and unknown commands alphanumerically
-          known.sort_by! { |_, idx| idx }.map! { |c, _| c }
-          unknown.map! { |c, _| c }.sort! { |c1, c2| c1.name <=> c2.name }
-
-          # Reform the command order
-          hash[key] = [*known, *unknown]
-        end
-        hash
-      end
+      keys = sections.keys
+      max = keys.length
+      commands.each_with_object({}) do |(_, cmd), memo|
+        memo[cmd.section] ||= []
+        memo[cmd.section] << cmd
+      end.sort_by { |k, _| keys.index(k) || max }.to_h
     end
+  end
+end
+
+module FlightWebSuite
+  class ProgramContext < Commander::HelpFormatter::ProgramContext
   end
 
   class HelpFormatter < Commander::HelpFormatter::Terminal

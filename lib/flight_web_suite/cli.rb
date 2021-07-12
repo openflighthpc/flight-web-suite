@@ -36,6 +36,7 @@ module FlightWebSuite
 
     def self.create_command(name, args_str = '')
       command(name) do |c|
+        c.program = self
         c.syntax = "#{program :name} #{name} #{args_str}"
         c.hidden if name.split.length > 1
 
@@ -66,6 +67,11 @@ module FlightWebSuite
     @help_formatter_aliases = {}
     program :help_formatter, HelpFormatter
 
+    # Define the sections
+    section :domain,        "Domain Management:"
+    section :service,       "Service Management:"
+    section :service_file,  "Service File Management:"
+
     if [/^xterm/, /rxvt/, /256color/].all? { |regex| ENV['TERM'] !~ regex }
       Paint.mode = 0
     end
@@ -76,6 +82,26 @@ module FlightWebSuite
 
     create_command 'set-domain', 'DOMAIN' do |c|
       c.summary = 'Set the web-suite domain'
+    end
+
+    create_command 'start', '[SERVICE...]' do |c|
+      c.summary = 'Start all (or specified) web-suite services'
+      c.section = :service
+    end
+
+    create_command 'stop', '[SERVICE...]' do |c|
+      c.summary = 'Stop all (or specified) web-suite services'
+      c.section = :service
+    end
+
+    create_command 'restart', '[SERVICE...]' do |c|
+      c.summary = 'Restart all (or specified) web-suite services'
+      c.section = :service
+    end
+
+    create_command 'reload', '[SERVICE...]' do |c|
+      c.summary = 'Reload all (or specified) web-suite services'
+      c.section = :service
     end
 
     if Flight.env.development?
