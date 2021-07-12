@@ -1,0 +1,5 @@
+etc/web-suite*.local.yaml
+var
+.bundle/*
+vendor
+.env.development.local
