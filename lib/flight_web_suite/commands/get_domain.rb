@@ -25,51 +25,12 @@
 # https://github.com/openflighthpc/flight-web-suite
 #==============================================================================
 
-require 'open3'
-
 module FlightWebSuite
-  class Command
-    attr_accessor :args, :opts
-
-    def initialize(args, opts)
-      @args = args.freeze
-      @opts = opts
-    end
-
-    def run!
-      FlightWebSuite.logger.info "Running: #{self.class}"
-      run
-      FlightWebSuite.logger.info 'Exited: 0'
-    rescue => e
-      if e.respond_to? :exit_code
-        FlightWebSuite.logger.fatal "Exited: #{e.exit_code}"
-      else
-        FlightWebSuite.logger.fatal 'Exited non-zero'
+  module Commands
+    class GetDomain < Command
+      def run
+        puts run_command(*Flight.config.config_command, 'get', 'web-suite.domain')
       end
-      FlightWebSuite.logger.debug e.backtrace.reverse.join("\n")
-      FlightWebSuite.logger.error "(#{e.class}) #{e.message}"
-      raise e
-    end
-
-    def run
-      raise NotImplementedError
-    end
-
-    def run_command(*cmd)
-      str = cmd.join(' ')
-      Flight.logger.info "Running: #{str}"
-      out, err, status = Open3.capture3(*cmd)
-      Flight.logger.debug <<~CMD.chomp
-
-        COMMAND: #{str}
-        STATUS: #{status.to_i}
-        STDOUT:
-        #{out}
-        STDERR:
-        #{err}
-      CMD
-      raise CommandError, "Failed to run command: #{str}" unless status.success?
-      out
     end
   end
 end

@@ -70,7 +70,7 @@ module FlightWebSuite
       Paint.mode = 0
     end
 
-    create_command 'info-domain' do |c|
+    create_command 'get-domain' do |c|
       c.summary = 'View the current web-suite domain'
     end
 
