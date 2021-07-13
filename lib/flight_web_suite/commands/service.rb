@@ -48,6 +48,16 @@ module FlightWebSuite
         new(args, opts).run!
       end
 
+      def self.enable(args, opts, _)
+        opts.command = 'enable'
+        new(args, opts).run!
+      end
+
+      def self.disable(args, opts, _)
+        opts.command = 'disable'
+        new(args, opts).run!
+      end
+
       def run
         services.each do |service|
           system(*Flight.config.service_command, opts.command, service)

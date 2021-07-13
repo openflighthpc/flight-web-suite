@@ -99,6 +99,18 @@ module FlightWebSuite
       c.action Commands::Service, :reload
     end
 
+    create_command 'enable', '[SERVICE...]' do |c|
+      c.summary = 'Add all (or specified) services to the batch control list'
+      c.section = :service_file
+      c.action Commands::Service, :enable
+    end
+
+    create_command 'disable', '[SERVICE...]' do |c|
+      c.summary = 'Remove all (or specified) services from the batch control list'
+      c.section = :service_file
+      c.action Commands::Service, :disable
+    end
+
     if Flight.env.development?
       create_command 'console' do |c|
         c.action do |args, opts|
