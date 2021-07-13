@@ -46,6 +46,16 @@
 # service_command: 'flight service'
 
 # ==============================================================================
+# Services
+#
+# The list of services which are part of flight-web-suite. This list must be a
+# comma separated list.
+#
+# The environment variable flight_WEB_SUITE_services takes precedence
+# ==============================================================================
+# services: console-api,desktop-restapi,file-manager-api,job-script-api,login-api,www
+
+# ==============================================================================
 # Log Path
 # The file the logger will write to. It will write to standard error if
 # omitted.
