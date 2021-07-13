@@ -51,7 +51,7 @@ module FlightWebSuite
           #{err}
         CMD
         raise CommandError, "Failed to run command: #{str}" unless status.success?
-        out
+        puts out
       end
     end
   end
