@@ -54,22 +54,5 @@ module FlightWebSuite
     def run
       raise NotImplementedError
     end
-
-    def run_command(*cmd)
-      str = cmd.join(' ')
-      Flight.logger.info "Running: #{str}"
-      out, err, status = Open3.capture3(*cmd)
-      Flight.logger.debug <<~CMD.chomp
-
-        COMMAND: #{str}
-        STATUS: #{status.to_i}
-        STDOUT:
-        #{out}
-        STDERR:
-        #{err}
-      CMD
-      raise CommandError, "Failed to run command: #{str}" unless status.success?
-      out
-    end
   end
 end

@@ -27,12 +27,32 @@
 
 module FlightWebSuite
   module Commands
-    class SetDomain < Command
+    class Domain < Command
+      def self.get(_a, opts, _c)
+        new(['get', 'web-suite.domain'], opts).run!
+      end
+
+      def self.set(args, opts, _)
+        new(['set', 'web-suite.domain', args.first], opts).run!
+      end
+
       def run
-        run_command(*Flight.config.config_command, 'set', 'web-suite.domain', args.first)
-        puts "Domain set to: #{args.first}"
+        cmd = [*Flight.config.config_command, *args]
+        str = cmd.join(' ')
+        Flight.logger.info "Running: #{str}"
+        out, err, status = Open3.capture3(*cmd)
+        Flight.logger.debug <<~CMD.chomp
+
+          COMMAND: #{str}
+          STATUS: #{status.to_i}
+          STDOUT:
+          #{out}
+          STDERR:
+          #{err}
+        CMD
+        raise CommandError, "Failed to run command: #{str}" unless status.success?
+        out
       end
     end
   end
 end
-

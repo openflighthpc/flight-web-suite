@@ -29,28 +29,17 @@ require_relative 'version'
 
 require 'commander'
 require_relative 'help_formatter'
+require_relative '../flight_web_suite'
 
 module FlightWebSuite
   module CLI
     extend Commander::CLI
 
     def self.create_command(name, args_str = '')
-      command(name) do |c|
+      command(name) do |c, action|
         c.program = self
         c.syntax = "#{program :name} #{name} #{args_str}"
         c.hidden if name.split.length > 1
-
-        c.action do |args, opts|
-          require_relative '../flight_web_suite'
-          begin
-            const_string = FlightWebSuite.constantize(c.name)
-            command = FlightWebSuite::Commands.const_get(const_string).new(args, opts)
-          rescue NameError
-            FlightWebSuite.logger.fatal "Command class not defined (maybe?): FlightWebSuite::Commands::#{const_string}"
-            raise InternalError.define_class(127), 'Command Not Found!'
-          end
-          command.run!
-        end
 
         yield c if block_given?
       end
@@ -78,10 +67,12 @@ module FlightWebSuite
 
     create_command 'get-domain' do |c|
       c.summary = 'View the current web-suite domain'
+      c.action Commands::Domain, :get
     end
 
     create_command 'set-domain', 'DOMAIN' do |c|
       c.summary = 'Set the web-suite domain'
+      c.action Commands::Domain, :set
     end
 
     create_command 'start', '[SERVICE...]' do |c|
