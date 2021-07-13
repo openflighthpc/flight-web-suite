@@ -78,21 +78,25 @@ module FlightWebSuite
     create_command 'start', '[SERVICE...]' do |c|
       c.summary = 'Start all (or specified) web-suite services'
       c.section = :service
+      c.action Commands::Service, :start
     end
 
     create_command 'stop', '[SERVICE...]' do |c|
       c.summary = 'Stop all (or specified) web-suite services'
       c.section = :service
+      c.action Commands::Service, :stop
     end
 
     create_command 'restart', '[SERVICE...]' do |c|
       c.summary = 'Restart all (or specified) web-suite services'
       c.section = :service
+      c.action Commands::Service, :restart
     end
 
     create_command 'reload', '[SERVICE...]' do |c|
       c.summary = 'Reload all (or specified) web-suite services'
       c.section = :service
+      c.action Commands::Service, :reload
     end
 
     if Flight.env.development?

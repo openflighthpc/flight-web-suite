@@ -45,6 +45,9 @@ module FlightWebSuite
     attribute :service_command, default: 'flight service',
               transform: ->(s) { Shellwords.split(s) }
 
+    attribute :services, default: 'console-api,desktop-restapi,file-manager-api,job-script-api,login-api,www',
+              transform: ->(s) { s.split(',') }
+
     attribute :log_path, required: false,
               default: 'var/log/web-suite/.log',
               transform: ->(path) do
