@@ -32,6 +32,7 @@ gem 'activemodel'
 gem 'commander-openflighthpc', '~> 2.1'
 gem 'flight_configuration', github: 'openflighthpc/flight_configuration', tag: '0.3.0'
 gem 'dotenv'
+gem 'pastel'
 
 group :development do
   gem 'pry'

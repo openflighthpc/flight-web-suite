@@ -26,6 +26,7 @@
 #==============================================================================
 
 require 'open3'
+require 'pastel'
 
 module FlightWebSuite
   class Command
@@ -53,6 +54,22 @@ module FlightWebSuite
 
     def run
       raise NotImplementedError
+    end
+
+    def pastel
+      @pastel ||= Pastel.new
+    end
+
+    def log_command(cmd, status, out, err)
+      Flight.logger.debug <<~CMD.chomp
+
+        COMMAND: #{cmd}
+        STATUS: #{status.to_i}
+        STDOUT:
+        #{out}
+        STDERR:
+        #{err}
+      CMD
     end
   end
 end

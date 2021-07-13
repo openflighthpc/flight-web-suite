@@ -40,6 +40,8 @@ module FlightWebSuite
 
     application_name 'web-suite'
 
+    attribute :www_command, default: 'flight www',
+              transform: ->(s) { Shellwords.split(s) }
     attribute :config_command, default: 'flight config',
               transform: ->(s) { Shellwords.split(s) }
     attribute :service_command, default: 'flight service',

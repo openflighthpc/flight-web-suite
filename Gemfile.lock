@@ -30,6 +30,8 @@ GEM
     method_source (1.0.0)
     minitest (5.14.4)
     paint (2.1.1)
+    pastel (0.8.0)
+      tty-color (~> 0.5)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -37,6 +39,7 @@ GEM
       byebug (~> 11.0)
       pry (~> 0.10)
     slop (4.9.1)
+    tty-color (0.6.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     zeitwerk (2.4.2)
@@ -50,6 +53,7 @@ DEPENDENCIES
   commander-openflighthpc (~> 2.1)
   dotenv
   flight_configuration!
+  pastel
   pry
   pry-byebug
 
