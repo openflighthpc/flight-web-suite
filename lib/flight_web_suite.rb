@@ -32,10 +32,6 @@ require_relative 'flight_web_suite/configuration'
 require_relative 'flight_web_suite/command'
 
 module FlightWebSuite
-  class << self
-    delegate :config, :env, :logger, :root, to: Flight
-  end
-
   def self.constantize(sym)
     sym.to_s.dup.split(/[-_]/).each { |c| c[0] = c[0].upcase }.join
   end

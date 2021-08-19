@@ -38,17 +38,17 @@ module FlightWebSuite
     end
 
     def run!
-      FlightWebSuite.logger.info "Running: #{self.class}"
+      Flight.logger.info "Running: #{self.class}"
       run
-      FlightWebSuite.logger.info 'Exited: 0'
+      Flight.logger.info 'Exited: 0'
     rescue => e
       if e.respond_to? :exit_code
-        FlightWebSuite.logger.fatal "Exited: #{e.exit_code}"
+        Flight.logger.fatal "Exited: #{e.exit_code}"
       else
-        FlightWebSuite.logger.fatal 'Exited non-zero'
+        Flight.logger.fatal 'Exited non-zero'
       end
-      FlightWebSuite.logger.debug e.backtrace.reverse.join("\n")
-      FlightWebSuite.logger.error "(#{e.class}) #{e.message}"
+      Flight.logger.debug e.backtrace.reverse.join("\n")
+      Flight.logger.error "(#{e.class}) #{e.message}"
       raise e
     end
 
