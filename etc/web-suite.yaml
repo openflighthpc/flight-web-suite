@@ -27,7 +27,7 @@
 
 # ==============================================================================
 # Flight Command
-# Specify the flight command
+# Specify the flight command either as an absolute path or a relative path.
 #
 # The environment variable flight_WEB_SUITE_flight_command takes precedence
 #
