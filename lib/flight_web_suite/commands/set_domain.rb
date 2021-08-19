@@ -42,7 +42,7 @@ module FlightWebSuite
       private
 
       def run_cert_gen
-        cmd = [*Flight.config.www_command, 'cert-gen', '--domain', args.first]
+        cmd = [*Flight.config.cert_gen_command, '--domain', args.first]
         cmd.concat(['--email', opts.email]) if opts.email
         cmd.concat(['--cert-type', opts.cert_type]) if opts.cert_type
         str = cmd.join(' ')

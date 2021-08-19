@@ -40,11 +40,16 @@ module FlightWebSuite
 
     application_name 'web-suite'
 
-    attribute :www_command, default: 'flight www',
+    attribute :flight_command, default: 'bin/flight',
+              transform: relative_to(ENV.fetch('flight_ROOT', '/opt/flight'))
+    attribute :cert_gen_command,
+              default: ->(config) { "#{config.flight_command} www cert-gen" },
               transform: ->(s) { Shellwords.split(s) }
-    attribute :config_command, default: 'flight config',
+    attribute :config_command,
+              default: ->(config) { "#{config.flight_command} config" },
               transform: ->(s) { Shellwords.split(s) }
-    attribute :service_command, default: 'flight service',
+    attribute :service_command,
+              default: ->(config) { "#{config.flight_command} service" },
               transform: ->(s) { Shellwords.split(s) }
 
     attribute :services, default: 'console-api,desktop-restapi,file-manager-api,job-script-api,login-api,www',

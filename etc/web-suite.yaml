@@ -26,6 +26,16 @@
 #==============================================================================
 
 # ==============================================================================
+# Flight Command
+# Specify the flight command
+#
+# The environment variable flight_WEB_SUITE_flight_command takes precedence
+#
+# Relative paths are expanded from `flight_ROOT` defaulting to `/opt/flight`.
+# ==============================================================================
+# flight_command: bin/flight
+
+# ==============================================================================
 # Config Command
 # Specify the flight-config command
 #
@@ -33,7 +43,7 @@
 #
 # Relative paths are not expanded.
 # ==============================================================================
-# config_command: 'flight config'
+# config_command: '<flight_command> config'
 
 # ==============================================================================
 # Service Command
@@ -43,7 +53,17 @@
 #
 # Relative paths are not expanded.
 # ==============================================================================
-# service_command: 'flight service'
+# service_command: '<flight_command> service'
+
+# ==============================================================================
+# SSL Certificate Gerneration Command
+# Specify the command to generate SSL certificates
+#
+# The environment variable flight_WEB_SUITE_cert_gen_command takes precedence
+#
+# Relative paths are not expanded.
+# ==============================================================================
+# cert_gen_command: '<flight_command> www cert-gen'
 
 # ==============================================================================
 # Services
