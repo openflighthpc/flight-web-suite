@@ -34,7 +34,7 @@ module FlightWebSuite
 
       def run
         cmd = [*Flight.config.config_command, 'get', 'web-suite.domain']
-        str = cmd.join(' ')
+        str = cmd.map(&:inspect).join(' ')
         Flight.logger.info "Running: #{str}"
         out, err, status = Open3.capture3(*cmd)
         log_command(str, status, out, err)

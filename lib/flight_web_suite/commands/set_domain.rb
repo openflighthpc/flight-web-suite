@@ -35,7 +35,7 @@ module FlightWebSuite
       def run
         run_cert_gen
         run_config_set
-        puts "Your domain has been updated! The web service can be restarted with:"
+        puts "Your domain has been updated! The web services can be restarted with:"
         puts pastel.yellow "#{CLI.program(:name)} restart"
       end
 
@@ -45,7 +45,7 @@ module FlightWebSuite
         cmd = [*Flight.config.cert_gen_command, '--domain', args.first]
         cmd.concat(['--email', opts.email]) if opts.email
         cmd.concat(['--cert-type', opts.cert_type]) if opts.cert_type
-        str = cmd.join(' ')
+        str = cmd.map(&:inspect).join(' ')
         Flight.logger.info "Running: #{str}"
         # NOTE: flight-www doesn't emit its errors to STDERR :(
         # As this *may* change without warning, it is best to merge stdout/stderr
@@ -53,7 +53,7 @@ module FlightWebSuite
         log_command(str, status, out, '')
         if !status.success? && out.include?('--email')
           raise InputError, <<~ERROR.chomp
-            Can not generate a LetsEncrypt certificate without an email address!
+            Cannot generate a LetsEncrypt certificate without an email address!
             Please provide one of the following flags: #{pastel.yellow("--cert-type self-signed | --email EMAIL")}
           ERROR
         elsif !status.success?
@@ -75,7 +75,7 @@ module FlightWebSuite
 
       def run_config_set
         cmd = [*Flight.config.config_command, 'set', 'web-suite.domain', args.first]
-        str = cmd.join(' ')
+        str = cmd.map(&:inspect).join(' ')
         Flight.logger.info "Running: #{str}"
         out, err, status = Open3.capture3(*cmd)
         log_command(str, status, out, err)
