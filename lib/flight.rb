@@ -47,7 +47,12 @@ module Flight
     end
 
     def config
-      @config ||= FlightWebSuite::Configuration.load
+      return @config if @config
+      @config = FlightWebSuite::Configuration.build
+      @config.tap do |c|
+        c.__logs__.log_with(logger)
+        raise FlightWebSuite::ConfigError, c.rich_error_message unless c.valid?
+      end
     end
     alias_method :load_configuration, :config
 
