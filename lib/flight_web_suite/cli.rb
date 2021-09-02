@@ -66,7 +66,8 @@ module FlightWebSuite
     end
 
     create_command 'get-domain' do |c|
-      c.summary = 'View the current web-suite domain'
+      c.summary = 'Print the current web-suite domain'
+      c.slop.bool '--use-fallback', 'Use fallback methods to determine the domain'
       c.action Commands::GetDomain, :get
     end
 

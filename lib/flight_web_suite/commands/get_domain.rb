@@ -39,8 +39,27 @@ module FlightWebSuite
         out, err, status = Open3.capture3(*cmd)
         log_command(str, status, out, err)
         raise CommandError, "Failed to run command: #{str}" unless status.success?
+
+        if out.nil? || out.empty? && opts.use_fallback
+          # The domain hasn't been set with `flight config`.  Let's try some
+          # alternate locations.
+          out = fallback_domain
+          out = "#{out}\n" unless out[-1] == "\n"
+        end
         # Use print to avoid adding a newline if `out` is empty.
         print out
+      end
+
+      private
+
+      def fallback_domain
+        flight_root = ENV.fetch('flight_ROOT', '/opt/flight')
+        cert_config_path = File.join(flight_root, 'etc', 'cert.local.yaml')
+        if File.exist?(cert_config_path)
+          YAML.load(File.new(cert_config_path).read)['domain'] || ""
+        end
+      rescue
+        ""
       end
     end
   end
