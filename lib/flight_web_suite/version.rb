@@ -25,4 +25,4 @@
 # https://github.com/openflighthpc/flight-web-suite
 #==============================================================================
 
-FlightWebSuite::VERSION = '1.1.0'
+FlightWebSuite::VERSION = '1.1.1-rc1'
