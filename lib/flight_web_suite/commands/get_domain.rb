@@ -39,7 +39,8 @@ module FlightWebSuite
         out, err, status = Open3.capture3(*cmd)
         log_command(str, status, out, err)
         raise CommandError, "Failed to run command: #{str}" unless status.success?
-        puts out
+        # Use print to avoid adding a newline if `out` is empty.
+        print out
       end
     end
   end
