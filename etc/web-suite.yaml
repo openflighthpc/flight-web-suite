@@ -73,7 +73,7 @@
 #
 # The environment variable flight_WEB_SUITE_services takes precedence
 # ==============================================================================
-# services: console-api,desktop-restapi,file-manager-api,file-manager-backend-proxy,job-script-api,login-api,www
+# services: console-api,desktop-restapi,file-manager-api,file-manager-backend-proxy,login-api,www
 
 # ==============================================================================
 # Log Path

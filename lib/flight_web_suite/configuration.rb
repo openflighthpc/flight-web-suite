@@ -52,7 +52,7 @@ module FlightWebSuite
               default: ->(config) { "#{config.flight_command} service" },
               transform: ->(s) { Shellwords.split(s) }
 
-    attribute :services, default: 'console-api,desktop-restapi,file-manager-api,file-manager-backend-proxy,job-script-api,login-api,www',
+    attribute :services, default: 'console-api,desktop-restapi,file-manager-api,file-manager-backend-proxy,login-api,www',
               transform: ->(s) { s.split(',') }
 
     attribute :log_path, required: false,
