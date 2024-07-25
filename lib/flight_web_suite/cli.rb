@@ -73,6 +73,7 @@ module FlightWebSuite
 
     create_command 'set-domain', 'DOMAIN' do |c|
       c.summary = 'Set the web-suite domain'
+      c.slop.bool '--no-generate', 'Skip certificate generation'
       c.slop.string '--cert-type', 'Select the certificate type: lets-encrypt|self-signed'
       c.slop.string '--email', "The email address associated with the Let's Encrypt certificate. Use empty string to unset"
       c.action Commands::SetDomain, :set
