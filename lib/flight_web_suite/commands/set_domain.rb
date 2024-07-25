@@ -33,7 +33,7 @@ module FlightWebSuite
       end
 
       def run
-        run_cert_gen
+        run_cert_gen unless opts.no_generate
         run_config_set
         puts "Your domain has been updated! The web services can be restarted with:"
         puts pastel.yellow "#{CLI.program(:name)} restart"
